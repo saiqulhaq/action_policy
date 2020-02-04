@@ -60,13 +60,11 @@ module ActionPolicy
     end
 
     def authorization_context
-      return @__authorization_context if
-        instance_variable_defined?(:@__authorization_context)
-
       @__authorization_context = self.class.authorization_targets
         .each_with_object({}) do |(key, meth), obj|
-        obj[key] = send(meth)
+        obj[key] = send(meth) if obj[key].nil?
       end
+      @__authorization_context
     end
 
     # Check that rule is defined for policy,
